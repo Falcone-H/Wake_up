@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_heartbeat"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="30dp"
+            android:drawableLeft="@android:drawable/ic_lock_idle_charging"
+            android:ems="10"
+            android:hint="患者心率"
+            android:inputType="textShortMessage"
+            android:textColorHighlight="#6699cc"
+            android:textColorLink="#6699cc" />
+
+        <EditText
+            android:id="@+id/edit_shuzhangya"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="0dp"
+            android:drawableLeft="@android:drawable/ic_lock_idle_charging"
+            android:ems="10"
+            android:hint="患者舒张压"
+            android:inputType="textShortMessage"
+            android:textColorHighlight="#6699cc"
+            android:textColorLink="#6699cc" />
+
+        <EditText
+            android:id="@+id/edit_shousuoya"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:drawableLeft="@android:drawable/ic_lock_idle_charging"
+            android:ems="10"
+            android:hint="患者收缩压"
+            android:inputType="textShortMessage"
+            android:textColorHighlight="#6699cc"
+            android:textColorLink="#6699cc" />
+
+        <RadioGroup
+            android:id="@+id/edit_mood"
+            android:layout_width="match_parent"
+            android:layout_height="90dp">
+
+            <RadioButton
+                android:id="@+id/option1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="患者心情愉悦" />
+
+            <RadioButton
+                android:id="@+id/option2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="患者心情焦虑或紧张" />
+
+            <RadioButton
+                android:id="@+id/option3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="患者心情难过或失落" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/register_btn_sure"
+            android:layout_width="180dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/btn_getdata"
+            android:text="保存并返回"
+            android:textColor="#fff"
+            android:textSize="23dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/nav"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#d3d3d3"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/img_main"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@mipmap/home1" />
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_main"
+                android:text="首页"
+                android:textColor="#6699cc"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/img_music"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/img_music" />
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_music"
+                android:gravity="center"
+                android:text="音乐"
+                android:textColor="#6699cc"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/img_analyze"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/img_analyze" />
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_analyze"
+                android:gravity="center"
+                android:text="分析"
+                android:textColor="#6699cc"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/img_person"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/img_person" />
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_person"
+                android:gravity="center"
+                android:text="个人"
+                android:textColor="#6699cc"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
