@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.wolverine.ble",
+  "variantName": "debug",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "properties": [],
+      "versionCode": 43,
+      "versionName": "43",
+      "enabled": true,
+      "outputFile": "app-debug.apk"
+    }
+  ]
+}

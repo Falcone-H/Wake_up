@@ -1,0 +1,30 @@
+[
+    {
+        "merged": "D:\\Work\\Android\\nWolverine-BLE1\\app\\build\\intermediates\\res\\merged\\debug\\layout_device_element.xml.flat",
+        "source": "D:\\Work\\Android\\nWolverine-BLE1\\app\\src\\main\\res\\layout\\device_element.xml"
+    },
+    {
+        "merged": "D:\\Work\\Android\\nWolverine-BLE1\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_nrfuart_hdpi_icon.png.flat",
+        "source": "D:\\Work\\Android\\nWolverine-BLE1\\app\\src\\main\\res\\drawable-hdpi\\nrfuart_hdpi_icon.png"
+    },
+    {
+        "merged": "D:\\Work\\Android\\nWolverine-BLE1\\app\\build\\intermediates\\res\\merged\\debug\\layout_main.xml.flat",
+        "source": "D:\\Work\\Android\\nWolverine-BLE1\\app\\src\\main\\res\\layout\\main.xml"
+    },
+    {
+        "merged": "D:\\Work\\Android\\nWolverine-BLE1\\app\\build\\intermediates\\res\\merged\\debug\\layout_title_bar.xml.flat",
+        "source": "D:\\Work\\Android\\nWolverine-BLE1\\app\\src\\main\\res\\layout\\title_bar.xml"
+    },
+    {
+        "merged": "D:\\Work\\Android\\nWolverine-BLE1\\app\\build\\intermediates\\res\\merged\\debug\\layout_message_detail.xml.flat",
+        "source": "D:\\Work\\Android\\nWolverine-BLE1\\app\\src\\main\\res\\layout\\message_detail.xml"
+    },
+    {
+        "merged": "D:\\Work\\Android\\nWolverine-BLE1\\app\\build\\intermediates\\res\\merged\\debug\\layout_dis_values.xml.flat",
+        "source": "D:\\Work\\Android\\nWolverine-BLE1\\app\\src\\main\\res\\layout\\dis_values.xml"
+    },
+    {
+        "merged": "D:\\Work\\Android\\nWolverine-BLE1\\app\\build\\intermediates\\res\\merged\\debug\\layout_device_list.xml.flat",
+        "source": "D:\\Work\\Android\\nWolverine-BLE1\\app\\src\\main\\res\\layout\\device_list.xml"
+    }
+]
