@@ -66,45 +66,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        drawerLayout = findViewById(R.id.drawer_layout);
-        left = findViewById(R.id.left_draw);
-
-        drawerLayout.closeDrawer(left);    //打开侧边栏
-        //drawerLayout.openDrawer(left);      //关闭侧边栏
-
-        //解决  当在侧边栏上进行操作时，页面主体部分的监听事件还是会被触发  的问题
-        left.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        //侧边栏滑动
-        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                //滑动时
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                //打开时
-
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                //关闭时
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-                //改变时
-            }
-        });
-
-
         username_display = findViewById(R.id.username_display);
 
         SharedPreferences settings = getSharedPreferences("userprofile", 0);
