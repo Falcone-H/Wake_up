@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Activity;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -25,6 +25,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.EditMusicActivity;
+import com.example.myapplication.LocalMusicAdapter;
+import com.example.myapplication.LocalMusicBean;
+import com.example.myapplication.R;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +10,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
+import com.example.myapplication.AppDatabase;
+import com.example.myapplication.R;
+import com.example.myapplication.User;
+import com.example.myapplication.UserDao;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -22,7 +26,6 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class AnalyzeActivity extends AppCompatActivity {
     private LineChart lineChart;

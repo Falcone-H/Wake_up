@@ -12,6 +12,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.Activity.AnalyzeActivity;
+import com.example.myapplication.Activity.MainActivity;
+import com.example.myapplication.Activity.MusicActivity;
+import com.example.myapplication.Activity.PersonActivity;
+
 public class EditProfileActivity extends AppCompatActivity {
     private EditText mAccount;                        //用户名编辑
     private EditText mInfo;                            //密码编辑

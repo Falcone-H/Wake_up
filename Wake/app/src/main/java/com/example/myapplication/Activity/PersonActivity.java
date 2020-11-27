@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.myapplication.EditProfileActivity;
+import com.example.myapplication.R;
 
 public class PersonActivity extends AppCompatActivity {
     private EditText mAccount;                        //用户名编辑

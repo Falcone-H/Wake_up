@@ -15,7 +15,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
-import java.util.Date;
+import com.example.myapplication.Activity.AnalyzeActivity;
+import com.example.myapplication.Activity.MainActivity;
+import com.example.myapplication.Activity.MusicActivity;
+import com.example.myapplication.Activity.PersonActivity;
 
 public class EditHealthActivity extends AppCompatActivity {
     private EditText mHeartBeat;                        //用户名编辑
