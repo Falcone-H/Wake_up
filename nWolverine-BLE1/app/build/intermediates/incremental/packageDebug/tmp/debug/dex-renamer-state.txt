@@ -1,4 +1,4 @@
-#Mon Nov 16 13:04:59 CST 2020
+#Thu Nov 26 13:34:30 CST 2020
 base.0=D\:\\Work\\Android\\nWolverine-BLE1\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

@@ -190,6 +190,9 @@ public class DeviceListActivity extends Activity {
             deviceList.add(device);
             mEmptyList.setVisibility(View.GONE);
             deviceAdapter.notifyDataSetChanged();
+            if(device.getAddress().equals("80:EA:CA:03:02:01")){
+                Toast.makeText(this, "Have Found!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
