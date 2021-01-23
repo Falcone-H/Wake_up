@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Edit;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +19,10 @@ import com.example.myapplication.Activity.AnalyzeActivity;
 import com.example.myapplication.Activity.MainActivity;
 import com.example.myapplication.Activity.MusicActivity;
 import com.example.myapplication.Activity.PersonActivity;
+import com.example.myapplication.AppDatabase;
+import com.example.myapplication.R;
+import com.example.myapplication.User;
+import com.example.myapplication.UserDao;
 
 public class EditHealthActivity extends AppCompatActivity {
     private EditText mHeartBeat;                        //用户名编辑

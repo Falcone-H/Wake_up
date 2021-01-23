@@ -26,9 +26,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.EditMusicActivity;
-import com.example.myapplication.LocalMusicAdapter;
-import com.example.myapplication.LocalMusicBean;
+import com.example.myapplication.Edit.EditMusicActivity;
+import com.example.myapplication.Adapter.LocalMusicAdapter;
+import com.example.myapplication.Adapter.LocalMusicBean;
 import com.example.myapplication.R;
 
 import java.io.IOException;

@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.EditProfileActivity;
+import com.example.myapplication.Edit.EditProfileActivity;
 import com.example.myapplication.R;
 
 public class PersonActivity extends AppCompatActivity {

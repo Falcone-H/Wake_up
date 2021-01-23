@@ -19,9 +19,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.BluetoothConnect"></activity>
         <activity android:name=".Activity.PersonActivity" />
-        <activity android:name=".EditHealthActivity" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".EditMusicActivity" />
+        <activity android:name=".Edit.EditHealthActivity" />
+        <activity android:name=".Edit.EditProfileActivity" />
+        <activity android:name=".Edit.EditMusicActivity" />
         <activity android:name=".Activity.AnalyzeActivity" />
         <activity
             android:name=".Activity.MusicActivity"

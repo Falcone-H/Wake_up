@@ -13,12 +13,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.example.myapplication.Adapter.DeviceAdapter;
 import com.example.myapplication.R;
+
+import java.net.CookieHandler;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BluetoothConnect extends Activity {
 
@@ -30,6 +39,9 @@ public class BluetoothConnect extends Activity {
 
     boolean device_found = false;
     private String Address = "80:EA:CA:03:02:01";
+    public static Map<String, Integer> deviceRssiValues;
+    public List<BluetoothDevice> deviceList;
+    private DeviceAdapter deviceAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,12 +65,22 @@ public class BluetoothConnect extends Activity {
         if(bluetoothAdapter == null) {
             Toast.makeText(this, "Bluetooth Low Energy not supported", Toast.LENGTH_SHORT).show();
             finish();
+            return;
         }
 
-        if(isScanning == false)
-            scanLeDevice(true);
-        else
-            finish();
+        populateList();
+
+        Button cancel_button = findViewById(R.id.cancel_button);
+
+        cancel_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isScanning == false)
+                    scanLeDevice(true);
+                else
+                    finish();
+            }
+        });
     }
 
     private void scanLeDevice(final boolean enable) {
@@ -87,6 +109,33 @@ public class BluetoothConnect extends Activity {
         }
     }
 
+    private void populateList() {
+        deviceList = new ArrayList<BluetoothDevice>();
+        deviceAdapter = new DeviceAdapter(this, deviceList);
+        deviceRssiValues = new HashMap<String, Integer>();
+
+        ListView newDevicesListView = findViewById(R.id.device_listview);
+        newDevicesListView.setAdapter(deviceAdapter);
+        newDevicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BluetoothDevice device = deviceList.get(position);
+                bluetoothAdapter.stopLeScan(leScanCallback);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(BluetoothDevice.EXTRA_DEVICE, deviceList.get(position).getAddress());
+
+                Intent result = new Intent();
+                result.putExtras(bundle);
+                setResult(Activity.RESULT_OK, result);
+                finish();
+            }
+        });
+
+        scanLeDevice(true);
+
+    }
+
     private BluetoothAdapter.LeScanCallback leScanCallback =
             new BluetoothAdapter.LeScanCallback() {
                 @Override
@@ -107,16 +156,20 @@ public class BluetoothConnect extends Activity {
             };
 
     private void addDevice(BluetoothDevice device, int rssi) {
-        if(device.getAddress().equals(Address)) {
-            Log.d("Connect", "add " + device.getAddress());
-            bluetoothAdapter.stopLeScan(leScanCallback);
-            Bundle bundle = new Bundle();
-            bundle.putString(BluetoothDevice.EXTRA_DEVICE, Address);
-            Intent result = new Intent();
-            result.putExtras(bundle);
-            setResult(Activity.RESULT_OK, result);
-            device_found = true;
-            finish();
+        boolean device_found = false;
+
+        for(BluetoothDevice device_item : deviceList) {
+            if(device_item.getAddress().equals(device.getAddress())) {
+                device_found = true;
+                break;
+            }
+        }
+
+        deviceRssiValues.put(device.getAddress(), rssi);
+
+        if(!device_found) {
+            deviceList.add(device);
+            deviceAdapter.notifyDataSetChanged();
         }
     }
 
