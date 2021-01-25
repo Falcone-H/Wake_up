@@ -52,7 +52,6 @@ public class DeviceAdapter extends BaseAdapter {
         BluetoothDevice bluetoothDevice = devices.get(position);
         final TextView address_textview = viewGroup.findViewById(R.id.address_textview);
         final TextView name_textview = viewGroup.findViewById(R.id.name_textview);
-        final TextView paired_textview = viewGroup.findViewById(R.id.paired_textview);
         final TextView rssi_textview = viewGroup.findViewById(R.id.rssi_textview);
 
         rssi_textview.setVisibility(View.VISIBLE);
@@ -63,6 +62,10 @@ public class DeviceAdapter extends BaseAdapter {
 
             name_textview.setText(bluetoothDevice.getName());
             address_textview.setText(bluetoothDevice.getAddress());
+        }
+
+        if(name_textview.getText().equals("")) {
+            name_textview.setText("未知设备");
         }
         return viewGroup;
     }

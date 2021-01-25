@@ -92,10 +92,10 @@ public class BluetoothConnect extends Activity {
                 public void run() {
                     isScanning = false;
                     bluetoothAdapter.stopLeScan(leScanCallback);
-                    if(!device_found){
-                        Toast.makeText(BluetoothConnect.this, "Device not found", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
+//                    if(!device_found){
+//                        Toast.makeText(BluetoothConnect.this, "Device not found", Toast.LENGTH_SHORT).show();
+//                        finish();
+//                    }
                 }
             }, SCAN_PERION);
 

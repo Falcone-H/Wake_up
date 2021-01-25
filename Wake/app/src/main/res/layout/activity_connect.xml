@@ -8,9 +8,19 @@
     tools:context=".Activity.BluetoothConnect"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="请选择设备"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:id="@+id/tips_textview"
+        android:layout_alignParentTop="true"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/tips_textview"
         android:id="@+id/device_listview"/>
 
     <Button

@@ -152,11 +152,13 @@ public class MainActivity extends AppCompatActivity {
 
                         Intent newIntent = new Intent(MainActivity.this, BluetoothConnect.class);
                         startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+                        getData_btn.setEnabled(true);
                     } else {
                         //Disconnect button pressed
                         if (bluetoothdevice != null) {
                             uartservice.disconnect();
                         }
+                        getData_btn.setEnabled(false);
                     }
                 }
             }
@@ -241,6 +243,8 @@ public class MainActivity extends AppCompatActivity {
         connect_btn = findViewById(R.id.connect_btn);
         device_address = findViewById(R.id.device_address_tv);
         getData_btn = findViewById(R.id.getData_btn);
+
+        getData_btn.setEnabled(false);
     }
 
     private static final int REQUEST_COARSE_LOCATION = 0;
