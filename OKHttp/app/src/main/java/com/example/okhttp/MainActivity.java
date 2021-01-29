@@ -1,15 +1,25 @@
 package com.example.okhttp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.textclassifier.TextLinks;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -38,13 +48,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String result;
     private String url;
     private int result_code = 0;
-    private List<String> name_list;
+    public static ArrayList<String> name_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+
+        //权限判断，如果没有权限就请求权限
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+
         gethttp_button.setOnClickListener(this);
         play_button.setOnClickListener(this);
     }
@@ -101,10 +117,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 content_textview.setText(result_code + "");
                 getName();
+                break;
             case R.id.paly_button:
-                url = "https://106.53.96.45:8081/music/download?filename=";
-                get(url + "Anything.mp3");
+                playMusic();
         }
+    }
+
+    private void playMusic() {
+        Intent intent = new Intent(MainActivity.this, MusicActiviy.class);
+        intent.putStringArrayListExtra("name_list", name_list);
+        startActivity(intent);
     }
 
     private void get(String url) {
@@ -193,6 +215,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return builder.build();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 1:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    
+                }else{
+                    Toast.makeText(this, "拒绝权限，将无法使用程序。", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+                break;
+            default:
         }
 
     }
