@@ -17,6 +17,12 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="下载"
+        android:id="@+id/download_button"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="播放"
         android:textSize="20dp"
         android:id="@+id/paly_button"/>

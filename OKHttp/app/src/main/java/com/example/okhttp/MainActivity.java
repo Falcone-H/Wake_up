@@ -6,9 +6,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -44,10 +46,13 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Button gethttp_button;
     private Button play_button;
+    private Button upload_button;
     private TextView content_textview;
-    private String result;
+    private TextView post_textview;
+    private String result_get = "";
+    private String result_post = "";
+    private int result_code;
     private String url;
-    private int result_code = 0;
     public static ArrayList<String> name_list;
 
     @Override
@@ -60,9 +65,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
+        requestPermission(this);
 
         gethttp_button.setOnClickListener(this);
         play_button.setOnClickListener(this);
+        upload_button.setOnClickListener(this);
     }
 
     private void init() {
@@ -70,32 +77,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         gethttp_button = findViewById(R.id.gethttp_button);
         play_button = findViewById(R.id.paly_button);
         content_textview = findViewById(R.id.content_textview);
+        post_textview = findViewById(R.id.post_textview);
+        upload_button = findViewById(R.id.upload_button);
     }
 
     private void getName() {
         int index;
         int start;
         int end = 0;
-        while(end != result.length()) {
-            index = result.indexOf("mp3", end);
+        while(end != result_get.length()) {
+            index = result_get.indexOf("mp3", end);
             if(index == -1)
                 break;
             start = index;
             end = index;
             while(true) {
                 start--;
-                if(result.charAt(start) == '\"') {
+                if(result_get.charAt(start) == '\"') {
                     break;
                 }
             }
             start++;
             while(true) {
                 end++;
-                if(result.charAt(end) == '\"') {
+                if(result_get.charAt(end) == '\"') {
                     break;
                 }
             }
-            String name = result.substring(start, end);
+            String name = result_get.substring(start, end);
             name_list.add(name);
         }
     }
@@ -104,23 +113,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.gethttp_button:
-                url = "https://106.53.96.45:8081/music/list";
-                result = "";
-                get(url);
-                while(result.equals("")) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("GET", "waiting for response");
-                }
-                content_textview.setText(result_code + "");
+                connect();
                 getName();
                 break;
             case R.id.paly_button:
                 playMusic();
+                break;
+            case R.id.upload_button:
+                upload();
+                break;
         }
+    }
+
+    private void connect() {
+        url = "https://106.53.96.45:8081/music/list";
+        result_get = "";
+        get(url);
+        while(result_get.equals("")) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Log.d("GET", "waiting for response");
+        }
+        content_textview.setText(result_code + "");
+    }
+
+    private void upload() {
+        post("https://106.53.96.45:8081/data/upload", 1, 1, 1, 1);
+        if(!result_post.equals(""))
+            post_textview.setText(result_post);
     }
 
     private void playMusic() {
@@ -147,33 +170,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Log.d("GET", "onResponse");
-                result = response.body().string();
-                Log.d("GET", result);
+                result_get = response.body().string();
+                Log.d("GET", result_get);
                 result_code = 1;
             }
         });
     }
 
-    private void post(String url) {
+    private void post(String url, int heart, int sbp, int dbp, int spo) {
         RequestBody requestBody = new FormBody.Builder()
-                .add("", "")
+                .add("patient_id", "1")
+                .add("heart", String.valueOf(heart))
+                .add("sbp", String.valueOf(sbp))
+                .add("dbp", String.valueOf(dbp))
+                .add("spo", String.valueOf(spo))
                 .build();
         Request request = new Request.Builder()
-                .url("")
+                .url(url)
                 .post(requestBody)
                 .build();
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = getUnsafeOkHttpClient();
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("POST", "fail to post");
-                result = "fail to post";
+                result_post = "fail to post";
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.d("GET", "OnResponse");
-                result = response.body().string();
+                Log.d("POST", "OnResponse");
+                result_post = response.body().string();
             }
         });
     }
@@ -234,7 +261,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+    private void requestPermission(Activity context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+
+            }
+        }
+    }
+
 }
+
+
 
 /*
 {"ID":1,
