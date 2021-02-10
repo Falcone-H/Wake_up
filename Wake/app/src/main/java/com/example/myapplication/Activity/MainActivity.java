@@ -1,6 +1,7 @@
 package com.example.myapplication.Activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -14,11 +15,14 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,15 +39,39 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.myapplication.R;
 import com.example.myapplication.UartService;
+import com.example.myapplication.Utils.FileUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity {
+    private HashMap<String, String> data_map = new HashMap<>();
+    private int upload_code = 0;
 
     private Button getData_btn;
     private Button connect_btn;
@@ -83,36 +111,15 @@ public class MainActivity extends AppCompatActivity {
 
         init();
 
-        //获取权限
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            int hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-
-            List<String> permissions = new ArrayList<String>();
-            if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
-                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            } else {
-                //preferencesUtility.setString("storage", "true");
-            }
-
-            if (hasReadPermission != PackageManager.PERMISSION_GRANTED) {
-                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-
-            } else {
-                //preferencesUtility.setString("storage", "true");
-            }
-
-            if (!permissions.isEmpty()) {
-                //requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
-
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE},
-                        REQUEST_PERMISSION);
-            }
-        }
-
         // 动态请求权限
-        mayRequestLocation();
+        requirePermission();
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
+
+        // Media 部分的下载
+        String url = "http://106.53.96.45/music/Anything.mp3";
+        // mediaDownload(url, "Anything.mp3");
 
         // UART service connected / disconnected
         serviceConnection = new ServiceConnection() {
@@ -176,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
         getData_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                upload_code = 0;
                 Log.d("Connect", "getting data");
                 byte[] value;
                 String[] str = {"heart", "blo", "blp", "bls", "step", "cal"};
@@ -247,9 +255,52 @@ public class MainActivity extends AppCompatActivity {
         getData_btn.setEnabled(false);
     }
 
-    private static final int REQUEST_COARSE_LOCATION = 0;
+    private static final int REQUEST_COARSE_LOCATION = 1;
+
+    private void requirePermission() {
+        requestReadExternalPermission();
+        mayRequestLocation();
+        requestPermission(this);
+    }
+
+    private void requestPermission(Activity context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+
+            }
+        }
+    }
 
     private void mayRequestLocation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            List<String> permissions = new ArrayList<String>();
+            if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            } else {
+                //preferencesUtility.setString("storage", "true");
+            }
+
+            if (hasReadPermission != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+
+            } else {
+                //preferencesUtility.setString("storage", "true");
+            }
+
+            if (!permissions.isEmpty()) {
+                //requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
+
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE},
+                        REQUEST_PERMISSION);
+            }
+        }
         if (Build.VERSION.SDK_INT >= 23) {
             int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
             if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
@@ -266,6 +317,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NewApi")
+    private void requestReadExternalPermission() {
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.d("Cursor", "READ permission IS NOT granted...");
+
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Log.d("Cursor", "1");
+            } else {
+                // 0 是自己定义的请求coude
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                Log.d("Cursor", "2");
+            }
+        } else {
+            Log.d("Cursor", "READ permission is granted...");
+        }
+
+
+    }
+
     //系统方法,从requestPermissions()方法回调结果
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -278,6 +349,20 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        if(requestCode == 0) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted
+                // request successfully, handle you transactions
+                Log.d("Cursor", " permission was granted");
+            } else {
+                // permission denied
+                // request failed
+                Log.d("Cursor", "permission denied");
+            }
+            return;
         }
     }
 
@@ -366,6 +451,8 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void changeData(String name, String text) {
+        data_map.put(name, text);
+        upload_code++;
         if(name.equals("heart")){
             heart_tv.setText(text);
         } else if(name.equals("blo")){
@@ -378,6 +465,9 @@ public class MainActivity extends AppCompatActivity {
             step_tv.setText(text);
         } else if(name.equals("cal")) {
             heat_tv.setText(text);
+        }
+        if(upload_code == 6) {
+
         }
     }
 
@@ -491,6 +581,115 @@ public class MainActivity extends AppCompatActivity {
                     .setNegativeButton("取消", null)
                     .show();
         }
+    }
+
+    /**
+     * 从服务器下载文件
+     * @param path 下载文件的地址
+     * @param FileName 文件名字
+     */
+    public void mediaDownload(final String path, final String FileName) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(path);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setReadTimeout(5000);
+                    con.setConnectTimeout(5000);
+                    con.setRequestProperty("Charset", "UTF-8");
+                    con.setRequestMethod("GET");
+                    if (con.getResponseCode() == 200) {
+                        InputStream is = con.getInputStream();//获取输入流
+                        FileOutputStream fileOutputStream = null;//文件输出流
+                        if (is != null) {
+                            FileUtils fileUtils = new FileUtils();
+                            fileOutputStream = new FileOutputStream(fileUtils.createFile(FileName));//指定文件保存路径，代码看下一步
+                            byte[] buf = new byte[1024];
+                            int ch;
+                            while ((ch = is.read(buf)) != -1) {
+                                fileOutputStream.write(buf, 0, ch);//将获取到的流写入文件中
+                            }
+                        }
+                        if (fileOutputStream != null) {
+                            fileOutputStream.flush();
+                            fileOutputStream.close();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("Download", "Failed");
+                }
+                Log.d("Download", "Successfully");
+            }
+        }).start();
+    }
+
+    private void post(String url, int heart, int sbp, int dbp, int spo) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("patient_id", "1")
+                .add("heart", String.valueOf(heart))
+                .add("sbp", String.valueOf(sbp))
+                .add("dbp", String.valueOf(dbp))
+                .add("spo", String.valueOf(spo))
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+        OkHttpClient okHttpClient = getUnsafeOkHttpClient();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("POST", "fail to post");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d("POST", "OnResponse");
+            }
+        });
+    }
+
+    // 为 OKHTTP 添加信任所有证书
+    public static OkHttpClient getUnsafeOkHttpClient() {
+
+        try {
+            final TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                        }
+
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
+                    }
+            };
+
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.sslSocketFactory(sslSocketFactory);
+
+            builder.hostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
+
+            return builder.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }
